@@ -11,8 +11,9 @@ class AccountSchema(BaseModel):
     major: str
     tags: List[str]
     likes: List[str]
+    seen: List[str]
     bio: str
     cookie: str
-    
+
 
 

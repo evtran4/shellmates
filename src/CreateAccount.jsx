@@ -13,7 +13,6 @@ let account = {
     name: "",
     major: "",
     tags: [],
-    likes: [],
     bio: "",
     cookie: ""
 }
@@ -39,6 +38,7 @@ function createAcc(){
       "major": account.major,
       "tags": account.tags,
       "likes": [],
+      "seen": [],
       "bio": account.bio,
       "cookie": account.cookie
       

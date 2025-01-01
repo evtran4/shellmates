@@ -1,16 +1,15 @@
 import {motion, useMotionValue, useMotionValueEvent, useTransform} from 'framer-motion'
 
-export default function Card({displayedUser, allUsers, setUsers, swipeRight}){
+export default function Card({displayedUser, allUsers, setUsers, handleSwipe}){
     const x = useMotionValue(0);
     const opacity = useTransform(x, [-70, 0, 70], [0, 1, 0])
     const rotate = useTransform(x, [-70, 0, 70], [-3, 0, 3])
 
     const handleDragEnd = (e)=>{
-        if(Math.abs(x.get()) > 70){
+        let  pos = x.get();
+        if(Math.abs(pos) > 70){
             setUsers(allUsers.filter((user) => user.id != displayedUser.id));
-            if(x.get() > 0){
-                swipeRight(displayedUser);
-            }
+            handleSwipe(displayedUser, pos)
         }
     }
 

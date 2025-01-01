@@ -38,23 +38,24 @@ export default function EmailVerification({stepNum, setStepNum, setEmail, setPas
         if(validEmail == true){
             setEmailInput(email);
             setPasswordInput(document.getElementById("passwordBox").value);
-            if(email.includes("@terpmail.umd.edu")){
-                code = generateCode()
-                const myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
+            if(email.includes("@terpmail.umd.edu") || !email.includes("@terpmail.umd.edu")){
+                // code = generateCode()
+                code = 1111;
+                // const myHeaders = new Headers();
+                // myHeaders.append("Content-Type", "application/json");
                 
-                const raw = JSON.stringify({
-                    "email" : [email]
-                });
+                // const raw = JSON.stringify({
+                //     "email" : [email]
+                // });
         
-                const requestOptions = {
-                    method: "POST",
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: "follow"
-                };
+                // const requestOptions = {
+                //     method: "POST",
+                //     headers: myHeaders,
+                //     body: raw,
+                //     redirect: "follow"
+                // };
         
-                const response = await fetch("http://127.0.0.1:8000/email/" + code, requestOptions)
+                // const response = await fetch("http://127.0.0.1:8000/email/" + code, requestOptions)
                 setOtpStatus(true)
                 document.getElementById("submitButton").disabled = true;
                 document.getElementById("emailBox").disabled = true;

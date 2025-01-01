@@ -48,16 +48,44 @@ async def getAllUsers():
         users.append(user)
     return users
 
+@app.get("/getBatch/{cookie}")
+async def getBatch(cookie: str):
+    seen = users_collection.find_one({"cookie": cookie},{"_id": 0, "seen":1}).get("seen")
+    rawBatch = users_collection.find({"cookie" : {'$nin': seen, '$ne':cookie}}).limit(10)  #limit searches to user preferences 
+    batch = []
+    for user in rawBatch:
+        batch.append(user_serializer(user))
+    return batch
+
+@app.post("/swipe")
+async def scroll(user: AccountSchema, displayed: AccountSchema):
+    seen = user.seen
+    print(seen)
+    seen.append(displayed.cookie)
+    print(seen)
+    users_collection.update_one({'cookie' : user.cookie}, { '$set' : { "seen" : seen}})
+    return seen
+
 @app.get("/clearLikes")
 async def swipeRight():
     users_collection.update_many({}, { '$set' : { "likes" : []}})
     return {"status" : "ok"}
 
+@app.get("/clearSeen")
+async def swipeRight():
+    users_collection.update_many({}, { '$set' : { "seen" : []}})
+    return {"status" : "ok"}
+
+@app.get("/clearSeenForUser/{cookie}")
+async def swipeRight(cookie: str):
+    users_collection.update_one({"cookie" : cookie}, { '$set' : { "seen" : []}})
+    return {"status" : "ok"}
+
 @app.post("/swipeRight")
-async def swipeRight(user: AccountSchema, userToSend: AccountSchema):
-    currentLikes = userToSend.likes
+async def swipeRight(user: AccountSchema, displayed: AccountSchema):
+    currentLikes = displayed.likes
     currentLikes.append(user.name + " sent you a like")
-    users_collection.update_one({'cookie' : userToSend.cookie}, { '$set' : { "likes" : currentLikes}})
+    users_collection.update_one({'cookie' : displayed.cookie}, { '$set' : { "likes" : currentLikes}})
     return currentLikes
 
 

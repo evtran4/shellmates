@@ -8,6 +8,7 @@ def user_serializer(user) -> dict:
         "tags" : user["tags"],
         "likes": user["likes"],
         "bio": user["bio"],
+        "seen": user["seen"],
         "cookie": user["cookie"]
     }
 

@@ -48,8 +48,8 @@ function App() {
 
   async function fetchData(){
     const userRawResponse = await fetch("http://127.0.0.1:8000/getUserByCookie/" + Cookies.get("user"))
-    const allUsersRawResponse = await fetch("http://127.0.0.1:8000/getAllUsers")
     user = await userRawResponse.json()
+    const allUsersRawResponse = await fetch("http://127.0.0.1:8000/getBatch/" + user.cookie)
     setUsers(await allUsersRawResponse.json());
     console.log("setting user")
     changeUser()
@@ -72,15 +72,13 @@ function App() {
       }
   }, [])
 
-  async function swipeRight(userToSend){
-    console.log(user)
-    console.log(userToSend)
+  async function handleSwipe(userToSend, pos){
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     
     const raw = JSON.stringify({
         "user" : user,
-        "userToSend": userToSend
+        "displayed": userToSend
     });
   
     const requestOptions = {
@@ -89,8 +87,12 @@ function App() {
         body: raw,
         redirect: "follow"
     };
-  
-    const response = await fetch("http://127.0.0.1:8000/swipeRight", requestOptions)
+
+    if(pos > 70){    
+      const response = await fetch("http://127.0.0.1:8000/swipeRight", requestOptions)
+    }
+    const response = await fetch("http://127.0.0.1:8000/swipe", requestOptions)
+    user.seen.push(userToSend.cookie)
   }
 
   function changeUser(){
@@ -112,11 +114,9 @@ function App() {
       <h1>{user.name}</h1>
       <div className = "cardSwipe">
         {allUsers.map((user) => (
-          <Card swipeRight = {swipeRight} allUsers = {allUsers} setUsers = {setUsers} displayedUser = {user}></Card>
+          <Card handleSwipe = {handleSwipe} allUsers = {allUsers} setUsers = {setUsers} displayedUser = {user}></Card>
         ))}
       </div>
-      {/* <Card displayedUser = {displayedUser}></Card>
-      <SwipeButtons changeUser = {changeUser} swipeRight = {swipeRight}></SwipeButtons> */}
       <NavBar></NavBar>
       
     </>
