@@ -4,6 +4,7 @@ import {useNavigate, Link} from 'react-router-dom'
 import CreateAccount from './CreateAccount';
 import AuthRouter from './App';
 import OTPInput from './componenets/OTPInput';
+
 let code = ""
 
 export default function EmailVerification({stepNum, setStepNum, setEmail, setPassword}){
@@ -24,7 +25,7 @@ export default function EmailVerification({stepNum, setStepNum, setEmail, setPas
             let num = ~~(Math.random() * (10));
             code += num + ""
         }
-        return 1111
+        return code
     }
     const checkValidEmail = async (email) => {
         const raw = await fetch("http://127.0.0.1:8000/checkValidEmail/" + (email == ""? "blank": email))
@@ -37,7 +38,7 @@ export default function EmailVerification({stepNum, setStepNum, setEmail, setPas
         if(validEmail == true){
             setEmailInput(email);
             setPasswordInput(document.getElementById("passwordBox").value);
-            if(!email.includes("@terpmail.umd.edu")){
+            if(email.includes("@terpmail.umd.edu")){
                 code = generateCode()
                 const myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/json");

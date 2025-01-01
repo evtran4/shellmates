@@ -1,8 +1,18 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  height: 100vh;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+a{
+  color: inherit;
+  text-decoration: inherit;
+}
+a:hover{
+  color: inherit !important;
+  text-decoration: inherit;
 }
 h3{
   margin: 0px;
@@ -20,27 +30,9 @@ h3{
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
 
 .card {
   padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
 
 .emailContainer{
@@ -101,7 +93,7 @@ h3{
   border: 1px solid rgb(33, 33, 33);
   border-radius: 5px;
   height: 10px;
-  width: 100%;
+  width: 30%;
   margin-bottom: 50px;
 }
 
@@ -138,4 +130,134 @@ h3{
 .nameInputContainer{
   display: flex;
   gap: 5px;
+}
+
+.optionsContainer{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.buttonOption{
+  border: none;
+  transition: 0.25s
+}
+
+.buttonOption:hover{
+  opacity: 80%;
+}
+
+.cardFrame{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  width: 300px;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding-top: 20px;
+  align-items: center;
+  margin-bottom: 30px;
+  grid-column: 1;
+  grid-row: 1;
+}
+.cardImage{
+  display: block;
+  height: 350px;
+  width: 250px;
+  border: 1px solid black;
+  border-radius: 25px;
+  background-color: rgb(212, 212, 212);
+}
+
+.cardDescriptionContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  text-align: start;
+  padding-left: 30px;
+  width: 100%;
+}
+.cardName{
+  display: flex;
+  width: 100%;
+  h2{
+    margin-bottom: 0px;
+  }
+}
+.cardText{
+  display: flex;
+  width: 100%;
+}
+
+.swipeButtonsContainer{
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  margin-bottom: 50px;
+}
+
+.swipeButton{
+  width: 70px;
+  height: 70px;
+  border: 1px solid black;
+  background-color: rgb(236, 236, 236);
+  border-radius: 100%;
+}
+
+.swipeButton:hover{
+  opacity: 70%;
+}
+
+.navBar{
+  background-color: red;
+  color: white;
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.navBarButton{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  background-color: red;
+  color: white;
+  font-size: 20px ;
+}
+
+.navBarButton:hover{
+  background-color: darkred;
+}
+
+.notificationsContainer{
+  width: 100%;
+  border-radius: 1px solid black;
+  height: 100vh;
+}
+
+.notification{
+  border-top: 1px solid black;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 50px;
+  color: black;
+  padding-left: 5px;
+}
+
+.profilePic{
+  background-color: gray;
+  display: block;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.cardSwipe{
+  display: grid;
 }

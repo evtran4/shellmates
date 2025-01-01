@@ -8,7 +8,15 @@ import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom'
 import Cookies from 'js-cookie'
 import CreateAccount from './CreateAccount';
 import Login from './componenets/Login';
+import Card from './componenets/Card';
+import SwipeButtons from './componenets/SwipeButtons';
+import NavBar from './componenets/NavBar';
+import Notifications from './Notifications';
+import Settings from './Settings';
 
+//pull 10 users
+//after each swipe, remove user from 10 and from unscrolled database
+//end of scroll, pull 10 more
 const AuthRouter = () => {
   return(
       <Router>
@@ -17,36 +25,100 @@ const AuthRouter = () => {
               <Route path = "/EmailVerification" element = {<EmailVerification/>}></Route>
               <Route path = "/CreateAccount" element = {<CreateAccount/>}></Route>
               <Route path = "/Login" element = {<Login/>}></Route>
+              <Route path = "/Notifications" element = {<Notifications/>}></Route>
+              <Route path = "/Settings" element = {<Settings/>}></Route>
           </Routes>
       </Router>
   )
 }
+let scroll = 0;
+const loading = {
+  id: "Loading...",
+  name: "Loading...",
+  major: "Loading...",
+  tags: ["Loading..."],
+  bio: "Loading..."
+
+}
+let user = loading;
 
 function App() {
   let navigate = useNavigate()
-  const [user, setUser] = useState({
-    name: "Loading..."
-  })
+  const [allUsers, setUsers] = useState([]);
 
-  async function fetchUser(){
-    const response = await fetch("http://127.0.0.1:8000/getUserByCookie/" + Cookies.get("user"))
-    setUser(await response.json())
+  async function fetchData(){
+    const userRawResponse = await fetch("http://127.0.0.1:8000/getUserByCookie/" + Cookies.get("user"))
+    const allUsersRawResponse = await fetch("http://127.0.0.1:8000/getAllUsers")
+    user = await userRawResponse.json()
+    setUsers(await allUsersRawResponse.json());
+    console.log("setting user")
+    changeUser()
+  }
+  let firstRender = true;
+  useEffect(()=> {
+      if(Cookies.get("user") == null){
+        navigate("/Login")
+      }
+      else{
+        if(firstRender == false){
+          user = loading;
+          setUsers([loading]);
+          scroll = 0;
+          fetchData();
+        }
+        else{
+          firstRender = false;
+        }
+      }
+  }, [])
+
+  async function swipeRight(userToSend){
+    console.log(user)
+    console.log(userToSend)
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    const raw = JSON.stringify({
+        "user" : user,
+        "userToSend": userToSend
+    });
+  
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
+  
+    const response = await fetch("http://127.0.0.1:8000/swipeRight", requestOptions)
   }
 
-  useEffect(()=> {
-    if(Cookies.get("user") == null){
-      navigate("/Login")
+  function changeUser(){
+    console.log(scroll)
+    let nextUser = allUsers[scroll];
+    console.log(nextUser.id + " and " + user.id);
+    if(nextUser.id != user.id){
+      // setDisplayedUser(nextUser);
+      scroll++;
     }
     else{
-      fetchUser();
+      scroll++;
+      changeUser()
     }
-  }, [])
+  }
 
   return (
     <>
-      <h1>Dashboard</h1>
-      <h2>Welcome, + {user.name}</h2>
-      <button onClick = {() => {Cookies.remove("user"); navigate("/Login")}}>Log out</button>
+      <h1>{user.name}</h1>
+      <div className = "cardSwipe">
+        {allUsers.map((user) => (
+          <Card swipeRight = {swipeRight} allUsers = {allUsers} setUsers = {setUsers} displayedUser = {user}></Card>
+        ))}
+      </div>
+      {/* <Card displayedUser = {displayedUser}></Card>
+      <SwipeButtons changeUser = {changeUser} swipeRight = {swipeRight}></SwipeButtons> */}
+      <NavBar></NavBar>
+      
     </>
   )
 }

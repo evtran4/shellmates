@@ -10,7 +10,7 @@ export default function OTPInput({otpStatus, setOtpStatus, verifyCode}){
         if (inputRefs.current[0]) {
           inputRefs.current[0].focus();
         }
-      }, []);
+      }, [otpStatus]);
 
     const handleChange = (index, e) => {
         const value = e.target.value;

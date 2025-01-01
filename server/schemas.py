@@ -9,6 +9,8 @@ class AccountSchema(BaseModel):
     password: str
     name: str
     major: str
+    tags: List[str]
+    likes: List[str]
     bio: str
     cookie: str
     

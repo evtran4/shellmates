@@ -39,6 +39,28 @@ async def getUser(cookie: str):
         user = user_serializer(user)
         return user
 
+@app.get("/getAllUsers")
+async def getAllUsers():
+    rawUsers = users_collection.find({})
+    users = []
+    for rawUser in rawUsers:
+        user = user_serializer(rawUser)
+        users.append(user)
+    return users
+
+@app.get("/clearLikes")
+async def swipeRight():
+    users_collection.update_many({}, { '$set' : { "likes" : []}})
+    return {"status" : "ok"}
+
+@app.post("/swipeRight")
+async def swipeRight(user: AccountSchema, userToSend: AccountSchema):
+    currentLikes = userToSend.likes
+    currentLikes.append(user.name + " sent you a like")
+    users_collection.update_one({'cookie' : userToSend.cookie}, { '$set' : { "likes" : currentLikes}})
+    return currentLikes
+
+
 @app.get("/getUserByLogin/{email}/{password}")
 async def getUser(email: str, password: str):
     user = users_collection.find_one({"email" : email, "password" : password})
