@@ -13,6 +13,7 @@ let account = {
     name: "",
     major: "",
     tags: [],
+    dealbreakers: [],
     bio: "",
     cookie: ""
 }
@@ -39,6 +40,7 @@ function createAcc(){
       "tags": account.tags,
       "likes": [],
       "seen": [],
+      "dealbreakers": account.dealbreakers,
       "bio": account.bio,
       "cookie": account.cookie
       
@@ -101,7 +103,7 @@ export default function CreateAccount(){
 function Info({stepNum, setStepNum}){
     const [inputStatus, setInputStatus] = useState("")
     const ages = ["Select your age", 18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
-    const options = ["Smoking", "Drinking", "Weed"]
+    const options = ["Smoking", "Drinking", "Weed", "Drugs"]
     const tags = []
     return (stepNum == 1)?(
         <>
@@ -119,7 +121,7 @@ function Info({stepNum, setStepNum}){
             <p>Do any of the following apply to you?</p>
             <div className = "optionsContainer"> 
                 {options.map((option) => (
-                    <Button option = {option} tags = {tags}></Button>
+                    <Button option = {option} tags = {tags} limit = {1000}></Button>
                 ))}
             </div>
             <button className = "submitButton" onClick = {() => {
@@ -131,7 +133,9 @@ function Info({stepNum, setStepNum}){
                     }
                     else{
                         account.name = value;
-                        console.log(tags)
+                        console.log("Tags: ")
+                        tags.forEach((tag)=>{account.tags.push(tag)})
+                        console.log(account.tags)
                         setStepNum(2); 
                     }
                 }
@@ -156,7 +160,9 @@ function SchoolInfo({stepNum, setStepNum}){
             </select>
             <button className = "submitButton" onClick = {() => {
                 account.major = document.getElementById("majorBox").value;
-                console.log(account.major)
+                if(account.major == "Computer science"){
+                    account.tags.push("Computer Science Major")  //for dealbreakers
+                }
                 setStepNum(3); 
                 }}>Submit</button>
         </>
@@ -175,12 +181,12 @@ function Tags({stepNum, setStepNum}){
             <p className = "inputStatus" style = {(inputStatus == ""? {display: "none"}: {display: "block"})}>{inputStatus}</p>
             <div className = "optionsContainer"> 
                 {options.map((option) => (
-                    <Button option = {option} tags = {tags}></Button>
+                    <Button option = {option} tags = {tags} limit = {5}></Button>
                 ))}
             </div>
             <button className = "submitButton" onClick = {() => {
                 if(tags.length >= 1){
-                    account.tags = tags;
+                    tags.forEach((tag)=>{account.tags.push(tag)});
                     setStepNum(4)
                 }
                 else{
@@ -194,27 +200,21 @@ function Tags({stepNum, setStepNum}){
 function DealBreakers({stepNum, setStepNum}){
     let tags = []
     const [inputStatus, setInputStatus] = useState("")
-    const options = ["Smoker", "Drinker", "Uses Weed", "Uses Drugs", "Computer Science Major"]
+    const options = ["Smoking", "Drinking", "Weed", "Drugs", "Computer Science Major"]
     return (stepNum == 4)?(
         <>
             {/* <h3>What is your preferred gender?</h3>
             Male, Female, Doesn't Matter */}
-            <h3>Which of these would be a deal breaker for you?</h3>
+            <h3>Select any of the following that would be a deal breaker for you</h3>
             <p className = "inputStatus" style = {(inputStatus == ""? {display: "none"}: {display: "block"})}>{inputStatus}</p>
             <div className = "optionsContainer"> 
                 {options.map((option) => (
-                    <Button option = {option} tags = {tags}></Button>
+                    <Button option = {option} tags = {account.dealbreakers} limit = {1000}></Button>
                 ))}
             </div>
             <button className = "submitButton" onClick = {() => {
-                if(tags.length >= 1){
-                    //account.tags = tags;
-                    setStepNum(5)
-                }
-                else{
-                    setInputStatus("Please choose at least one tag")
-                }
-                }}>Submit</button>
+                setStepNum(5)
+            }}>Submit</button>
         </>
     ): ""
 }
@@ -233,12 +233,12 @@ function Bio({stepNum, setStepNum}){
     ): ""
 }
 
-function Button({option, tags}){
+function Button({option, tags, limit}){
     const [selected, setSelected] = useState(false);
     
     return(
         <button className = "buttonOption" style = {selected ? {backgroundColor: "#f07585"} : {backgroundColor: "gainsboro"}} onClick = {() => {
-            if(tags.length < 4 && selected == false){
+            if(tags.length < limit && selected == false){
                 setSelected(!selected)
                 tags.push(option)
             }

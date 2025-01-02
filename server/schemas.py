@@ -12,6 +12,7 @@ class AccountSchema(BaseModel):
     tags: List[str]
     likes: List[str]
     seen: List[str]
+    dealbreakers: List[str]
     bio: str
     cookie: str
 

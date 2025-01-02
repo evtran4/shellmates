@@ -50,8 +50,15 @@ async def getAllUsers():
 
 @app.get("/getBatch/{cookie}")
 async def getBatch(cookie: str):
-    seen = users_collection.find_one({"cookie": cookie},{"_id": 0, "seen":1}).get("seen")
-    rawBatch = users_collection.find({"cookie" : {'$nin': seen, '$ne':cookie}}).limit(10)  #limit searches to user preferences 
+    def getDealbreakers(tag):
+        return tag == "Uses Drugs" or tag == "Uses Weed" or tag == "Smoker" or tag == "Drinker"
+
+    rawUser = users_collection.find_one({"cookie": cookie})
+    user = user_serializer(rawUser)
+    seen = user["seen"] 
+    dealbreakers = user["dealbreakers"]
+    print(dealbreakers) 
+    rawBatch = users_collection.find({"cookie" : {'$nin': seen, '$ne':cookie}, "tags" : {'$nin': dealbreakers}}).limit(10)
     batch = []
     for user in rawBatch:
         batch.append(user_serializer(user))
@@ -60,9 +67,7 @@ async def getBatch(cookie: str):
 @app.post("/swipe")
 async def scroll(user: AccountSchema, displayed: AccountSchema):
     seen = user.seen
-    print(seen)
     seen.append(displayed.cookie)
-    print(seen)
     users_collection.update_one({'cookie' : user.cookie}, { '$set' : { "seen" : seen}})
     return seen
 
@@ -87,7 +92,6 @@ async def swipeRight(user: AccountSchema, displayed: AccountSchema):
     currentLikes.append(user.name + " sent you a like")
     users_collection.update_one({'cookie' : displayed.cookie}, { '$set' : { "likes" : currentLikes}})
     return currentLikes
-
 
 @app.get("/getUserByLogin/{email}/{password}")
 async def getUser(email: str, password: str):

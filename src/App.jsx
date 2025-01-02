@@ -38,7 +38,6 @@ const loading = {
   major: "Loading...",
   tags: ["Loading..."],
   bio: "Loading..."
-
 }
 let user = loading;
 
