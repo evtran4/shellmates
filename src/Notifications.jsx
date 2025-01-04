@@ -37,6 +37,7 @@ function Notification({notification}){
         <div className = "notification">
             <div className = "profilePic"></div>
             <p>{notification}</p>
+            <button className = "messageButton">Send Message</button>
         </div>
     )
 }

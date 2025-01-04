@@ -12,6 +12,7 @@ client = MongoClient(uri, tlsCAFile=certifi.where())
 
 db = client.mainDB
 users_collection = db["Users"]
+chats_collection = db["Chats"]
 
 
 

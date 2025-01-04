@@ -16,5 +16,11 @@ class AccountSchema(BaseModel):
     bio: str
     cookie: str
 
+class DMSchema(BaseModel):
+    sender: str
+    to: str
+    text: str
+    time: str
+
 
 

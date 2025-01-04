@@ -22,7 +22,7 @@ function createCookie(){
     let cookie = ""
     for(let i = 0; i < 50; i++){
         let num = ~~(Math.random() * (10));
-        cookie += num + ""
+        cookie += num + "" 
     }
     Cookies.set("user", cookie.toString(), {expires: 1})
     account.cookie = cookie.toString();
@@ -52,7 +52,6 @@ function createAcc(){
       body: raw,
       redirect: "follow"
     };
-    console.log(account)
     const response =  fetch("http://127.0.0.1:8000/createAccount", requestOptions)
 }
 

@@ -5,8 +5,8 @@ from starlette.responses import JSONResponse
 from serializers import user_serializer
 from fastapi.middleware.cors import CORSMiddleware
 import random
-from config import users_collection, mailConf
-from schemas import EmailSchema, AccountSchema
+from config import users_collection, mailConf, chats_collection
+from schemas import EmailSchema, AccountSchema, DMSchema
 import json
 app = FastAPI()
 
@@ -119,6 +119,7 @@ async def send(email: EmailSchema, code: str) -> JSONResponse:
         body=html,
         subtype=MessageType.html)
 
-    fm = FastMail(mailConf)
-    await fm.send_message(message)
+@app.post("/sendMessage")
+async def send(message: DMSchema) -> JSONResponse:
+    chats_collection.insert_one(dict(message))
     return {"message": "email has been sent"}
