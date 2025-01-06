@@ -5,7 +5,7 @@ export default function NavBar(){
             <Link className = "navBarButton" to ="/">Home</Link>
             <Link className = "navBarButton" to ="/Notifications">Notifications</Link>
             <Link to = "/Settings" className = "navBarButton">Settings</Link>
-            <Link to = "/Chat" className = "navBarButton">Messages</Link>
+            <Link to = "/Messages" className = "navBarButton">Messages</Link>
         </div>
     )
 }

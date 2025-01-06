@@ -13,4 +13,15 @@ def user_serializer(user) -> dict:
         "cookie": user["cookie"]
     }
 
+def message_serializer(message) -> dict:
+    return {
+        "sender": message["sender"],
+        "to": message["to"],
+        "text": message["text"],
+        "time": message["time"]
+    }
+
+
+
+
 

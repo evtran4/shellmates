@@ -14,6 +14,7 @@ import NavBar from './componenets/NavBar';
 import Notifications from './Notifications';
 import Settings from './Settings';
 import Chat from './Chat';
+import Messages from './Messages';
 //pull 10 users
 //after each swipe, remove user from 10 and from unscrolled database
 //end of scroll, pull 10 more
@@ -27,6 +28,7 @@ const AuthRouter = () => {
               <Route path = "/Login" element = {<Login/>}></Route>
               <Route path = "/Notifications" element = {<Notifications/>}></Route>
               <Route path = "/Settings" element = {<Settings/>}></Route>
+              <Route path = "/Messages" element = {<Messages/>}></Route>
               <Route path = "/Chat" element = {<Chat/>}></Route>
           </Routes>
       </Router>

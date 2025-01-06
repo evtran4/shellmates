@@ -2,7 +2,7 @@ from typing import List
 from fastapi import BackgroundTasks, FastAPI
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 from starlette.responses import JSONResponse
-from serializers import user_serializer
+from serializers import user_serializer, message_serializer
 from fastapi.middleware.cors import CORSMiddleware
 import random
 from config import users_collection, mailConf, chats_collection
@@ -50,14 +50,10 @@ async def getAllUsers():
 
 @app.get("/getBatch/{cookie}")
 async def getBatch(cookie: str):
-    def getDealbreakers(tag):
-        return tag == "Uses Drugs" or tag == "Uses Weed" or tag == "Smoker" or tag == "Drinker"
-
     rawUser = users_collection.find_one({"cookie": cookie})
     user = user_serializer(rawUser)
     seen = user["seen"] 
     dealbreakers = user["dealbreakers"]
-    print(dealbreakers) 
     rawBatch = users_collection.find({"cookie" : {'$nin': seen, '$ne':cookie}, "tags" : {'$nin': dealbreakers}}).limit(10)
     batch = []
     for user in rawBatch:
@@ -123,3 +119,13 @@ async def send(email: EmailSchema, code: str) -> JSONResponse:
 async def send(message: DMSchema) -> JSONResponse:
     chats_collection.insert_one(dict(message))
     return {"message": "email has been sent"}
+
+@app.get("/getMessageBatch/{sender}/{to}")
+async def getMessageBatch(sender: str, to: str):
+    print(to)
+    print(sender)
+    messages = []
+    rawMessages = chats_collection.find({'$or' : [{"to": (to), "sender": (sender)},{"to": (sender), "sender": (to)}]})
+    for message in rawMessages:
+        messages.append(message_serializer(message))
+    return messages
